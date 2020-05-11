@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/admin/uepalconfig</path>
+    <page_callback>CRM_Uepalconfig_Form_UepalConfig</page_callback>
+    <title>UepalConfig</title>
+    <access_arguments>access CiviCRM</access_arguments>
+  </item>
+</menu>
