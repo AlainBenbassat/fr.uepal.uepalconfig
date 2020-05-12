@@ -450,7 +450,7 @@ class CRM_Uepalconfig_Config {
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['EPRAL', 'UPCAAL', 'Centre de Rencontre et de Recueillement Spirituel'];
+    $options = ['EPRAL', 'EPCAAL', 'Centre de Rencontre et de Recueillement Spirituel'];
     return $this->createOrGetOptionGroup($params, $options);
   }
 
@@ -463,7 +463,7 @@ class CRM_Uepalconfig_Config {
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['Réformée', 'Lutheriene'];
+    $options = ['Réformée', 'Luthérienne'];
     return $this->createOrGetOptionGroup($params, $options);
   }
 
@@ -563,7 +563,6 @@ class CRM_Uepalconfig_Config {
         'dateInputFormat' => 'dd/mm/yy',
         'timeInputFormat' => '2',
         'weekBegins' => '1',
-
       ],
       'domainId' => 1,
     ]);
@@ -584,10 +583,12 @@ class CRM_Uepalconfig_Config {
   private function setAddressAndDsiplayFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
-        'address_format' => '{contact.address_name}\r\n{contact.street_address}\r\n{contact.supplemental_address_1}\r\n{contact.supplemental_address_2}\r\n{contact.supplemental_address_3}\r\n{contact.postal_code}{ }{contact.city}\r\n{contact.country}',
-        'mailing_format' => '{contact.addressee}\r\n{contact.street_address}\r\n{contact.supplemental_address_1}\r\n{contact.supplemental_address_2}\r\n{contact.supplemental_address_3}\r\n{contact.postal_code}{ }{contact.city}\r\n{contact.country}',
+        'address_format' => "{contact.address_name}\n{contact.street_address}\n{contact.supplemental_address_1}\n{contact.supplemental_address_2}\n{contact.supplemental_address_3}\n{contact.postal_code}{ }{contact.city}\n{contact.country}",
+        'mailing_format' => "{contact.addressee}\n{contact.street_address}\n{contact.supplemental_address_1}\n{contact.supplemental_address_2}\n{contact.supplemental_address_3}\n{contact.postal_code}{ }{contact.city}\n{contact.country}",
         'display_name_format' => '{contact.individual_prefix}{ }{contact.first_name}{ }{contact.last_name}{ }{contact.individual_suffix}',
         'sort_name_format' => '{contact.last_name}{, }{contact.first_name}',
+        'defaultContactCountry' => 1076,
+        
       ],
     ]);
   }
