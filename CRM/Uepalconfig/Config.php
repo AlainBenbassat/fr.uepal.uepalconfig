@@ -12,9 +12,6 @@ class CRM_Uepalconfig_Config {
     $this->setMoneyFormat();
     $this->setAddressAndDsiplayFormat();
 
-    /*
-     * point du milieu feminité  ·
-     */
     // contact types
     $this->createContactType('Organization', 'ecole', 'École');
     $this->createContactType('Organization', 'paroisse', 'Paroisse');
@@ -42,6 +39,12 @@ class CRM_Uepalconfig_Config {
     $this->getRelationshipType_estIntervenantDeReligionPour();
     $this->getRelationshipType_estPredicateurLaiquePour();
     $this->getRelationshipType_estParoissienDe();
+
+    // custom fields
+    $this->getCustomField_paroisseDetailEglise();
+    $this->getCustomField_paroisseDetailTheologie();
+    $this->getCustomField_paroisseDetailNombreParoissiens();
+    $this->getCustomField_paroisseDetailNombreElecteurs();
   }
 
   public function createContactType($baseContact, $name, $label) {
@@ -334,7 +337,137 @@ class CRM_Uepalconfig_Config {
     return  $this->createOrGetRelationshipType($params);
   }
 
-  private static function createOrGetRelationshipType($params) {
+  public function getCustomGroup_ParoisseDetail() {
+    $params = [
+      'name' => 'paroisse_detail',
+      'title' => 'Paroisse Detail',
+      'extends' => 'Organization',
+      'extends_entity_column_value' => [
+          'paroisse'
+      ],
+      'style' => 'Inline',
+      'collapse_display' => '0',
+      'weight' => '1',
+      'is_active' => '1',
+      'table_name' => 'civicrm_value_paroisse_detail',
+      'is_multiple' => '0',
+      'collapse_adv_display' => '0',
+      'is_reserved' => '0',
+      'is_public' => '0'
+    ];
+    return $this->createOrGetCustomGroup($params);
+  }
+
+  public function getCustomField_paroisseDetailEglise() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'Eglise',
+      'label' => 'Eglise',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '1',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'eglise',
+      'option_group_id' => $this->getOptionGroup_Eglises()['id'],
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_paroisseDetailTheologie() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'theologie',
+      'label' => 'Théologie',
+      'data_type' => 'String',
+      'html_type' => 'CheckBox',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '2',
+      'is_active' => '1',
+      'options_per_line' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'theologie',
+      'option_group_id' => $this->getOptionGroup_Theologie()['id'],
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_paroisseDetailNombreParoissiens() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'nombre_paroissiens',
+      'label' => 'Nombre de paroissiens',
+      'data_type' => 'Int',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '3',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'nombre_paroissiens',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_paroisseDetailNombreElecteurs() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'nombre_electeurs',
+      'label' => 'Nombre d\'électeurs',
+      'data_type' => 'Int',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '3',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'nombre_electeurs',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getOptionGroup_Eglises() {
+    $params = [
+      'name' => 'eglises',
+      'title' => 'Eglises',
+      'data_type' => 'String',
+      'is_reserved' => '0',
+      'is_active' => '1',
+      'is_locked' => '0'
+    ];
+    $options = ['EPRAL', 'UPCAAL', 'Centre de Rencontre et de Recueillement Spirituel'];
+    return $this->createOrGetOptionGroup($params, $options);
+  }
+
+  public function getOptionGroup_Theologie() {
+    $params = [
+      'name' => 'theologies',
+      'title' => 'Théologies',
+      'data_type' => 'String',
+      'is_reserved' => '0',
+      'is_active' => '1',
+      'is_locked' => '0'
+    ];
+    $options = ['Réformée', 'Lutheriene'];
+    return $this->createOrGetOptionGroup($params, $options);
+  }
+
+  private function createOrGetRelationshipType($params) {
     try {
       $relType = civicrm_api3('RelationshipType', 'getsingle', [
         'name_a_b' => $params['name_a_b'],
@@ -348,7 +481,77 @@ class CRM_Uepalconfig_Config {
     return $relType;
   }
 
-  private static function setDateFormat() {
+  private function createOrGetCustomGroup($params) {
+    try {
+      $customGroup = civicrm_api3('CustomGroup', 'getsingle', [
+        'name' => $params['name'],
+      ]);
+    }
+    catch (Exception $e) {
+      $customGroup = civicrm_api3('CustomGroup', 'create', $params);
+    }
+
+    return $customGroup;
+  }
+
+  private function createOrGetCustomField($params) {
+    try {
+      $customField = civicrm_api3('CustomField', 'getsingle', [
+        'custom_group_id' => $params['custom_group_id'],
+        'name' => $params['name'],
+      ]);
+    }
+    catch (Exception $e) {
+      $customField = civicrm_api3('CustomField', 'create', $params);
+    }
+
+    return $customField;
+  }
+
+  private function createOrGetOptionGroup($params, $options) {
+    // in Development mode we force the recreation of the options
+    $recreateOptions = FALSE;
+    if (Civi::settings()->get('environment') == 'Development') {
+      $recreateOptions = TRUE;
+    }
+
+    try {
+      $optionGroup = civicrm_api3('OptionGroup', 'getsingle', [
+        'name' => $params['name'],
+      ]);
+    }
+    catch (Exception $e) {
+      $optionGroup = civicrm_api3('OptionGroup', 'create', $params);
+      $recreateOptions = TRUE;
+    }
+
+    if ($recreateOptions) {
+      // delete existing options
+      $sql = "delete from civicrm_option_value where option_group_id = " . $optionGroup['id'];
+      CRM_Core_DAO::executeQuery($sql);
+
+      // add the options
+      $i = 1;
+      foreach ($options as $option) {
+        civicrm_api3('OptionValue', 'create', [
+          'option_group_id' => $optionGroup['id'],
+          'label' => $option,
+          'value' => $i,
+          'name' => CRM_Utils_String::munge($option, '_', 64),
+          'is_default' => '0',
+          'weight' => $i,
+          'is_optgroup' => '0',
+          'is_reserved' => '0',
+          'is_active' => '1'
+        ]);
+        $i++;
+      }
+    }
+
+    return $optionGroup;
+  }
+
+  private function setDateFormat() {
     //Civi\Api4\Setting::set()
     civicrm_api4('Setting', 'set', [
       'values' => [
@@ -366,7 +569,7 @@ class CRM_Uepalconfig_Config {
     ]);
   }
 
-  private static function setMoneyFormat() {
+  private function setMoneyFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
         'monetaryThousandSeparator' => ' ',
@@ -378,7 +581,7 @@ class CRM_Uepalconfig_Config {
     ]);
   }
 
-  private static function setAddressAndDsiplayFormat() {
+  private function setAddressAndDsiplayFormat() {
     civicrm_api4('Setting', 'set', [
       'values' => [
         'address_format' => '{contact.address_name}\r\n{contact.street_address}\r\n{contact.supplemental_address_1}\r\n{contact.supplemental_address_2}\r\n{contact.supplemental_address_3}\r\n{contact.postal_code}{ }{contact.city}\r\n{contact.country}',
