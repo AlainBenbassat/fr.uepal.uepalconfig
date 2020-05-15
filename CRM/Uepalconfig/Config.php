@@ -45,6 +45,12 @@ class CRM_Uepalconfig_Config {
     $this->getCustomField_paroisseDetailTheologie();
     $this->getCustomField_paroisseDetailNombreParoissiens();
     $this->getCustomField_paroisseDetailNombreElecteurs();
+
+    $this->getCustomField_pasteurDetailAnneeConsecration();
+    $this->getCustomField_pasteurDetailAnneeEntreeMinistere();
+    $this->getCustomField_pasteurDetailAnneeEntreePosteActuel();
+    $this->getCustomField_pasteurDetailDateCAFP();
+    $this->getCustomField_pasteurDetailDiplomes();
   }
 
   public function createContactType($baseContact, $name, $label) {
@@ -358,6 +364,127 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomGroup($params);
   }
 
+  public function getCustomGroup_PasteurDetail() {
+    $params = [
+      'name' => 'pasteur_detail',
+      'title' => 'Pasteur Detail',
+      'extends' => 'Individual',
+      'extends_entity_column_value' => [
+        'pasteur'
+      ],
+      'style' => 'Inline',
+      'collapse_display' => '0',
+      'weight' => '1',
+      'is_active' => '1',
+      'table_name' => 'civicrm_value_pasteur_detail',
+      'is_multiple' => '0',
+      'collapse_adv_display' => '0',
+      'is_reserved' => '0',
+      'is_public' => '0'
+    ];
+    return $this->createOrGetCustomGroup($params);
+  }
+
+  public function getCustomField_pasteurDetailAnneeConsecration() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'name' => 'annee_consecration',
+      'label' => 'Année de consécration',
+      'data_type' => 'Int',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '1',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'annee_consecration',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_pasteurDetailAnneeEntreeMinistere() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'name' => 'annee_entree_ministere',
+      'label' => 'Année d\'entrée au ministaire',
+      'data_type' => 'Int',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '2',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'annee_entree_ministere',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_pasteurDetailAnneeEntreePosteActuel() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'name' => 'annee_poste_actuel',
+      'label' => 'Année d\'entrée poste actuel',
+      'data_type' => 'Int',
+      'html_type' => 'Text',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '3',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'annee_poste_actuel',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_pasteurDetailDateCAFP() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'name' => 'date_cafp',
+      'label' => 'Date CAFP',
+      'data_type' => 'Date',
+      'html_type' => 'Select Date',
+      'is_searchable' => '1',
+      'is_search_range' => '1',
+      'weight' => '5',
+      'is_active' => '1',
+      'text_length' => '255',
+      'date_format' => 'dd/mm/yy',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'date_cafp',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_pasteurDetailDiplomes() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'name' => 'diplomes',
+      'label' => 'Diplômes',
+      'data_type' => 'Memo',
+      'html_type' => 'TextArea',
+      'is_search_range' => '0',
+      'weight' => '6',
+      'attributes' => 'rows=4, cols=60',
+      'is_active' => '1',
+      'note_columns' => '60',
+      'note_rows' => '6',
+      'column_name' => 'diplomes',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
   public function getCustomField_paroisseDetailEglise() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
@@ -588,8 +715,35 @@ class CRM_Uepalconfig_Config {
         'display_name_format' => '{contact.individual_prefix}{ }{contact.first_name}{ }{contact.last_name}{ }{contact.individual_suffix}',
         'sort_name_format' => '{contact.last_name}{, }{contact.first_name}',
         'defaultContactCountry' => 1076,
-        
       ],
     ]);
+
+    // set email_greeting and postal_greeting (e.g. Chère Mme la pasteure DUPOND, Cher M. PIF)
+    $format = '{capture assign=c}{contact.communication_style}{/capture}{capture assign=p}{contact.individual_prefix}{/capture}{if $p=="Mme"}Chère{else}Cher{/if} {if $c=="Familiar"}{contact.first_name}{else}{$p} {contact.formal_title} {contact.last_name}{/if}';
+    $sql = "
+      update
+        civicrm_option_value v
+      inner join
+        civicrm_option_group g on v.option_group_id = g.id
+      set
+        label = '$format'
+      where
+        g.name in ('email_greeting', 'postal_greeting')
+      and
+        v.value = 1
+    ";
+    CRM_Core_DAO::executeQuery($sql);
+
+    // see civicrm/admin/setting/preferences/display?reset=1, section "Editing Contacts" (Informations éditables)
+    // select everything except OpenID (= 10)
+    $prefs = [1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17];
+    $transformedPrefs = serialize(CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $prefs) . CRM_Core_DAO::VALUE_SEPARATOR);
+    $sql = "update civicrm_setting set value = %1 where name = 'contact_edit_options'";
+    $sqlParams = [
+      1 => [$transformedPrefs, 'String'],
+    ];
+    CRM_Core_DAO::executeQuery($sql, $sqlParams);
+
   }
+
 }
