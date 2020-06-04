@@ -47,6 +47,8 @@ class CRM_Uepalconfig_Config {
     // custom fields
     $this->getCustomField_paroisseDetailEglise();
     $this->getCustomField_paroisseDetailTheologie();
+    $this->getCustomField_paroisseDetailInspectionConsistoireReforme();
+    $this->getCustomField_paroisseDetailConsistoireLutherien();
     $this->getCustomField_paroisseDetailNombreParoissiens();
     $this->getCustomField_paroisseDetailNombreElecteurs();
 
@@ -584,6 +586,48 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
+  public function getCustomField_paroisseDetailInspectionConsistoireReforme() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'inspection_consistoire_reforme',
+      'label' => 'Inspection / Consistoire réformé',
+      'data_type' => 'ContactReference',
+      'html_type' => 'Autocomplete-Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '3',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'inspection_consistoire_reforme',
+      'filter' => 'action=get&contact_sub_type=inspection_consistoire_reforme',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_paroisseDetailConsistoireLutherien() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
+      'name' => 'consistoire_lutherien',
+      'label' => 'Consistoire luthérien',
+      'data_type' => 'ContactReference',
+      'html_type' => 'Autocomplete-Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '4',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'consistoire_lutherien',
+      'filter' => 'action=get&contact_sub_type=consistoire_lutherien',
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
   public function getCustomField_paroisseDetailNombreParoissiens() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
@@ -593,7 +637,7 @@ class CRM_Uepalconfig_Config {
       'html_type' => 'Text',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '3',
+      'weight' => '5',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
@@ -613,7 +657,7 @@ class CRM_Uepalconfig_Config {
       'html_type' => 'Text',
       'is_searchable' => '1',
       'is_search_range' => '1',
-      'weight' => '3',
+      'weight' => '6',
       'is_active' => '1',
       'text_length' => '255',
       'note_columns' => '60',
