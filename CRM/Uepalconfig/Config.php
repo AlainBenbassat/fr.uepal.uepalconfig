@@ -18,7 +18,10 @@ class CRM_Uepalconfig_Config {
     $this->createContactType('Organization', 'consistoire_lutherien', 'Consistoire luthérien');
     $this->createContactType('Organization', 'inspection_consistoire_reforme', 'Inspection / Consistoire réformé');
     $this->createContactType('Organization', 'commission', 'Commission');
-    $this->createContactType('Individual', 'pasteur', 'Pasteur');
+    $this->createContactType('Individual', 'ministre', 'Ministre');
+
+    // tags
+    $this->createTags(['Diacre', 'Pasteur·e', 'Suffragant·e', 'Vicaire']);
 
     // relationships
     $this->getRelationshipType_estMembreEluDe();
@@ -39,6 +42,7 @@ class CRM_Uepalconfig_Config {
     $this->getRelationshipType_estIntervenantDeReligionPour();
     $this->getRelationshipType_estPredicateurLaiquePour();
     $this->getRelationshipType_estParoissienDe();
+    $this->getRelationshipType_estSuffragantDe();
 
     // custom fields
     $this->getCustomField_paroisseDetailEglise();
@@ -73,6 +77,43 @@ class CRM_Uepalconfig_Config {
         'is_active' => 1,
         'parent_id' => $parentId,
       ]);
+    }
+  }
+
+  public function createTags($tags) {
+    // delete default tags
+    $defaultCiviTags = [
+      [1,'À but non lucratif'],
+      [2,'Entreprise'],
+      [3,'Organisation gouvernementale'],
+      [4,'Donateur majeur'],
+      [5,'Bénévole'],
+    ];
+    foreach ($defaultCiviTags as $defaultCiviTag) {
+      $sql = "delete from civicrm_tag where id = %1 and nom = %2 and description is not null";
+      $sqlParams = [
+        1 => [$defaultCiviTag[0], 'Integer'],
+        2 => [$defaultCiviTag[1], 'String'],
+      ];
+      CRM_Core_DAO::executeQuery($sql, $sqlParams);
+    }
+
+    // create the new ones
+    foreach ($tags as $tag) {
+      // check if it exists
+      $params = [
+        'sequential' => 1,
+        'name' => $tag,
+        'is_selectable' => '1',
+        'is_reserved' => '0',
+        'is_tagset' => '0',
+        'used_for' => 'civicrm_contact',
+      ];
+      $result = civicrm_api3('Tag', 'get', $params);
+      if ($result['count'] == 0) {
+        // create the tag
+        $result = civicrm_api3('Tag', 'get', $params);
+      }
     }
   }
 
@@ -334,6 +375,21 @@ class CRM_Uepalconfig_Config {
       'label_a_b' => 'est Paroissien·ne de',
       'name_b_a' => 'a_pour_paroissien',
       'label_b_a' => 'a pour Paroissien·ne',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
+      'contact_sub_type_b' => 'paroisse',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estSuffragantDe() {
+    $params = [
+      'name_a_b' => 'est_suffragant_de',
+      'label_a_b' => 'est Suffragant·e de',
+      'name_b_a' => 'a_pour_suffragant',
+      'label_b_a' => 'a pour Suffragant·e',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
       'contact_sub_type_b' => 'paroisse',
@@ -735,8 +791,8 @@ class CRM_Uepalconfig_Config {
     CRM_Core_DAO::executeQuery($sql);
 
     // see civicrm/admin/setting/preferences/display?reset=1, section "Editing Contacts" (Informations éditables)
-    // select everything except OpenID (= 10)
-    $prefs = [1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17];
+    // select everything except Other name and OpenID (= 10, 15)
+    $prefs = [1,2,3,4,5,6,7,8,9,11,12,13,14,16,17];
     $transformedPrefs = serialize(CRM_Core_DAO::VALUE_SEPARATOR . implode(CRM_Core_DAO::VALUE_SEPARATOR, $prefs) . CRM_Core_DAO::VALUE_SEPARATOR);
     $sql = "update civicrm_setting set value = %1 where name = 'contact_edit_options'";
     $sqlParams = [
