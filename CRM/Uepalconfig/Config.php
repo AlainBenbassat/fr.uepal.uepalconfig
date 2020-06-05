@@ -114,7 +114,7 @@ class CRM_Uepalconfig_Config {
       $result = civicrm_api3('Tag', 'get', $params);
       if ($result['count'] == 0) {
         // create the tag
-        $result = civicrm_api3('Tag', 'get', $params);
+        $result = civicrm_api3('Tag', 'create', $params);
       }
     }
   }
