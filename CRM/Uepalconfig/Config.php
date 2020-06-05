@@ -92,7 +92,7 @@ class CRM_Uepalconfig_Config {
       [5,'Bénévole'],
     ];
     foreach ($defaultCiviTags as $defaultCiviTag) {
-      $sql = "delete from civicrm_tag where id = %1 and nom = %2 and description is not null";
+      $sql = "delete from civicrm_tag where id = %1 and name = %2 and description is not null";
       $sqlParams = [
         1 => [$defaultCiviTag[0], 'Integer'],
         2 => [$defaultCiviTag[1], 'String'],
