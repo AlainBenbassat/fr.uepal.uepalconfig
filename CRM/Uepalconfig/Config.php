@@ -52,11 +52,11 @@ class CRM_Uepalconfig_Config {
     $this->getCustomField_paroisseDetailNombreParoissiens();
     $this->getCustomField_paroisseDetailNombreElecteurs();
 
-    $this->getCustomField_pasteurDetailAnneeConsecration();
-    $this->getCustomField_pasteurDetailAnneeEntreeMinistere();
-    $this->getCustomField_pasteurDetailAnneeEntreePosteActuel();
-    $this->getCustomField_pasteurDetailDateCAFP();
-    $this->getCustomField_pasteurDetailDiplomes();
+    $this->getCustomField_ministreDetailAnneeConsecration();
+    $this->getCustomField_ministreDetailAnneeEntreeMinistere();
+    $this->getCustomField_ministreDetailAnneeEntreePosteActuel();
+    $this->getCustomField_ministreDetailDateCAFP();
+    $this->getCustomField_ministreDetailDiplomes();
   }
 
   public function createContactType($baseContact, $name, $label) {
@@ -185,7 +185,7 @@ class CRM_Uepalconfig_Config {
       'label_b_a' => 'a pour Pasteur nommé·e',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
-      'contact_sub_type_a' => 'pasteur',
+      'contact_sub_type_a' => 'ministre',
       'contact_sub_type_b' => 'paroisse',
       'is_reserved' => '0',
       'is_active' => '1'
@@ -201,7 +201,7 @@ class CRM_Uepalconfig_Config {
       'label_b_a' => 'a pour Pasteur desservant·e',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
-      'contact_sub_type_a' => 'pasteur',
+      'contact_sub_type_a' => 'ministre',
       'contact_sub_type_b' => 'paroisse',
       'is_reserved' => '0',
       'is_active' => '1'
@@ -217,7 +217,7 @@ class CRM_Uepalconfig_Config {
       'label_b_a' => 'a pour Pasteur chargé·e de mission / détaché·e',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
-      'contact_sub_type_a' => 'pasteur',
+      'contact_sub_type_a' => 'ministre',
       'contact_sub_type_b' => 'paroisse',
       'is_reserved' => '0',
       'is_active' => '1'
@@ -233,7 +233,7 @@ class CRM_Uepalconfig_Config {
       'label_b_a' => 'a pour Pasteur auxiliaire',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
-      'contact_sub_type_a' => 'pasteur',
+      'contact_sub_type_a' => 'ministre',
       'contact_sub_type_b' => 'paroisse',
       'is_reserved' => '0',
       'is_active' => '1'
@@ -249,7 +249,7 @@ class CRM_Uepalconfig_Config {
       'label_b_a' => 'a pour Pasteur aumônier',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
-      'contact_sub_type_a' => 'pasteur',
+      'contact_sub_type_a' => 'ministre',
       'is_reserved' => '0',
       'is_active' => '1'
     ];
@@ -422,19 +422,19 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomGroup($params);
   }
 
-  public function getCustomGroup_PasteurDetail() {
+  public function getCustomGroup_MinistreDetail() {
     $params = [
-      'name' => 'pasteur_detail',
-      'title' => 'Pasteur Detail',
+      'name' => 'ministre_detail',
+      'title' => 'Ministre Detail',
       'extends' => 'Individual',
       'extends_entity_column_value' => [
-        'pasteur'
+        'ministre'
       ],
       'style' => 'Inline',
       'collapse_display' => '0',
       'weight' => '1',
       'is_active' => '1',
-      'table_name' => 'civicrm_value_pasteur_detail',
+      'table_name' => 'civicrm_value_ministre_detail',
       'is_multiple' => '0',
       'collapse_adv_display' => '0',
       'is_reserved' => '0',
@@ -443,9 +443,9 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomGroup($params);
   }
 
-  public function getCustomField_pasteurDetailAnneeConsecration() {
+  public function getCustomField_ministreDetailAnneeConsecration() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'annee_consecration',
       'label' => 'Année de consécration',
       'data_type' => 'Int',
@@ -463,9 +463,9 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
-  public function getCustomField_pasteurDetailAnneeEntreeMinistere() {
+  public function getCustomField_ministreDetailAnneeEntreeMinistere() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'annee_entree_ministere',
       'label' => 'Année d\'entrée au ministaire',
       'data_type' => 'Int',
@@ -483,9 +483,9 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
-  public function getCustomField_pasteurDetailAnneeEntreePosteActuel() {
+  public function getCustomField_ministreDetailAnneeEntreePosteActuel() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'annee_poste_actuel',
       'label' => 'Année d\'entrée poste actuel',
       'data_type' => 'Int',
@@ -503,9 +503,9 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
-  public function getCustomField_pasteurDetailDateCAFP() {
+  public function getCustomField_ministreDetailDateCAFP() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'date_cafp',
       'label' => 'Date CAFP',
       'data_type' => 'Date',
@@ -524,9 +524,9 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
-  public function getCustomField_pasteurDetailDiplomes() {
+  public function getCustomField_ministreDetailDiplomes() {
     $params = [
-      'custom_group_id' => $this->getCustomGroup_PasteurDetail()['id'],
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'diplomes',
       'label' => 'Diplômes',
       'data_type' => 'Memo',
