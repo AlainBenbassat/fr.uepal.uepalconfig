@@ -11,6 +11,7 @@ class CRM_Uepalconfig_Config {
     $this->setDateFormat();
     $this->setMoneyFormat();
     $this->setAddressAndDsiplayFormat();
+    $this->createPrivacyLevel();
 
     // contact types
     $this->createContactType('Organization', 'ecole', 'École');
@@ -57,6 +58,8 @@ class CRM_Uepalconfig_Config {
     $this->getCustomField_ministreDetailAnneeEntreePosteActuel();
     $this->getCustomField_ministreDetailDateCAFP();
     $this->getCustomField_ministreDetailDiplomes();
+    $this->getCustomField_ministreDetailRemunerePar();
+    $this->getCustomField_ministreDetailStatut();
   }
 
   public function createContactType($baseContact, $name, $label) {
@@ -543,10 +546,52 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
+  public function getCustomField_ministreDetailRemunerePar() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
+      'name' => 'remunere_par',
+      'label' => 'Rémunéré par',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '7',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'remunere_par',
+      'option_group_id' => $this->getOptionGroup_RemunerePar()['id'],
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
+  public function getCustomField_ministreDetailStatut() {
+    $params = [
+      'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
+      'name' => 'statut',
+      'label' => 'Statut',
+      'data_type' => 'String',
+      'html_type' => 'Select',
+      'is_searchable' => '1',
+      'is_search_range' => '0',
+      'weight' => '8',
+      'is_active' => '1',
+      'text_length' => '255',
+      'note_columns' => '60',
+      'note_rows' => '4',
+      'column_name' => 'statut',
+      'option_group_id' => $this->getOptionGroup_StatutPasteur()['id'],
+      'in_selector' => '0'
+    ];
+    return $this->createOrGetCustomField($params);
+  }
+
   public function getCustomField_paroisseDetailEglise() {
     $params = [
       'custom_group_id' => $this->getCustomGroup_ParoisseDetail()['id'],
-      'name' => 'Eglise',
+      'name' => 'eglise',
       'label' => 'Eglise',
       'data_type' => 'String',
       'html_type' => 'Select',
@@ -668,6 +713,32 @@ class CRM_Uepalconfig_Config {
     return $this->createOrGetCustomField($params);
   }
 
+  public function getOptionGroup_StatutPasteur() {
+    $params = [
+      'name' => 'statut_pasteur',
+      'title' => 'Statut pasteur',
+      'data_type' => 'String',
+      'is_reserved' => '0',
+      'is_active' => '1',
+      'is_locked' => '0'
+    ];
+    $options = ['Actif', 'En congé', 'Retraité'];
+    return $this->createOrGetOptionGroup($params, $options, 'Actif');
+  }
+
+  public function getOptionGroup_RemunerePar() {
+    $params = [
+      'name' => 'remunere_par',
+      'title' => 'Rémunéré par',
+      'data_type' => 'String',
+      'is_reserved' => '0',
+      'is_active' => '1',
+      'is_locked' => '0'
+    ];
+    $options = ['Bureau des cultes', 'ESP'];
+    return $this->createOrGetOptionGroup($params, $options);
+  }
+
   public function getOptionGroup_Eglises() {
     $params = [
       'name' => 'eglises',
@@ -677,7 +748,7 @@ class CRM_Uepalconfig_Config {
       'is_active' => '1',
       'is_locked' => '0'
     ];
-    $options = ['EPRAL', 'EPCAAL', 'Centre de Rencontre et de Recueillement Spirituel'];
+    $options = ['EPRAL', 'EPCAAL'];
     return $this->createOrGetOptionGroup($params, $options);
   }
 
@@ -735,7 +806,7 @@ class CRM_Uepalconfig_Config {
     return $customField;
   }
 
-  private function createOrGetOptionGroup($params, $options) {
+  private function createOrGetOptionGroup($params, $options, $defaultOption = '') {
     // in Development mode we force the recreation of the options
     $recreateOptions = FALSE;
     if (Civi::settings()->get('environment') == 'Development') {
@@ -765,7 +836,7 @@ class CRM_Uepalconfig_Config {
           'label' => $option,
           'value' => $i,
           'name' => CRM_Utils_String::munge($option, '_', 64),
-          'is_default' => '0',
+          'is_default' => ($option == $defaultOption) ? 1 : '0',
           'weight' => $i,
           'is_optgroup' => '0',
           'is_reserved' => '0',
@@ -844,6 +915,24 @@ class CRM_Uepalconfig_Config {
     ];
     CRM_Core_DAO::executeQuery($sql, $sqlParams);
 
+  }
+
+  private function createPrivacyLevel() {
+    //'Données confidentielles'
+    $result = civicrm_api3('OptionValue', 'get', [
+      'sequential' => 1,
+      'option_group_id' => "note_privacy",
+      'name' => 'Données confidentielles',
+    ]);
+    if ($result['count'] == 0) {
+      // create it
+      $result = civicrm_api3('OptionValue', 'create', [
+        'sequential' => 1,
+        'option_group_id' => "note_privacy",
+        'name' => 'Données confidentielles',
+        'label' => 'Données confidentielles',
+      ]);
+    }
   }
 
 }
