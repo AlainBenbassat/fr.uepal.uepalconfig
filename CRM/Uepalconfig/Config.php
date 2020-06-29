@@ -305,9 +305,9 @@ class CRM_Uepalconfig_Config {
   public function getRelationshipType_estTresorierDe() {
     $params = [
       'name_a_b' => 'est_tresorier_de',
-      'label_a_b' => 'est Trésorier.ère de',
+      'label_a_b' => 'est Trésorier·ère de',
       'name_b_a' => 'a_pour_tresorier',
-      'label_b_a' => 'a pour Trésorier.ère',
+      'label_b_a' => 'a pour Trésorier·ère',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
       'is_reserved' => '0',
@@ -470,7 +470,7 @@ class CRM_Uepalconfig_Config {
     $params = [
       'custom_group_id' => $this->getCustomGroup_MinistreDetail()['id'],
       'name' => 'annee_entree_ministere',
-      'label' => 'Année d\'entrée au ministaire',
+      'label' => 'Année d\'entrée au ministère',
       'data_type' => 'Int',
       'html_type' => 'Text',
       'is_searchable' => '1',
