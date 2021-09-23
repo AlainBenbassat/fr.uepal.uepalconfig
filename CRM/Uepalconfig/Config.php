@@ -45,6 +45,8 @@ class CRM_Uepalconfig_Config {
     $this->getRelationshipType_estParoissienDe();
     $this->getRelationshipType_estSuffragantDe();
     $this->getRelationshipType_estReceveurDe();
+    $this->getRelationshipType_estDelegueDe();
+    $this->getRelationshipType_estDelegueSuppleantDe();
 
     // custom fields
     $this->getCustomField_paroisseDetailEglise();
@@ -412,6 +414,36 @@ class CRM_Uepalconfig_Config {
       'label_a_b' => 'est Receveur·e de',
       'name_b_a' => 'a pour Receveur',
       'label_b_a' => 'a pour Receveur·e',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estDelegueDe() {
+    /* Was created manually in BDD, so names do not follow the names of other relationships */
+    $params = [
+      'name_a_b' => 'est Délégué·e à',
+      'label_a_b' => 'est Délégué·e à',
+      'name_b_a' => 'a pour Délégué·e',
+      'label_b_a' => 'a pour Délégué·e',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estDelegueSuppleantDe() {
+    /* Was created manually in BDD, so names do not follow the names of other relationships */
+    $params = [
+      'name_a_b' => 'est Délégué·e suppléant·e à',
+      'label_a_b' => 'est Délégué·e suppléant·e à',
+      'name_b_a' => 'a pour Délégué·e suppléant·e',
+      'label_b_a' => 'a pour Délégué·e suppléant·e',
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
       'is_reserved' => '0',
