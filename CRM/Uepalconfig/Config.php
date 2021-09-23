@@ -44,6 +44,7 @@ class CRM_Uepalconfig_Config {
     $this->getRelationshipType_estPredicateurLaiquePour();
     $this->getRelationshipType_estParoissienDe();
     $this->getRelationshipType_estSuffragantDe();
+    $this->getRelationshipType_estReceveurDe();
 
     // custom fields
     $this->getCustomField_paroisseDetailEglise();
@@ -398,6 +399,21 @@ class CRM_Uepalconfig_Config {
       'contact_type_a' => 'Individual',
       'contact_type_b' => 'Organization',
       'contact_sub_type_b' => 'paroisse',
+      'is_reserved' => '0',
+      'is_active' => '1'
+    ];
+    return  $this->createOrGetRelationshipType($params);
+  }
+
+  public function getRelationshipType_estReceveurDe() {
+    /* Was created manually in BDD, so names do not follow the names of other relationships */
+    $params = [
+      'name_a_b' => 'est Receveur de',
+      'label_a_b' => 'est Receveur·e de',
+      'name_b_a' => 'a pour Receveur',
+      'label_b_a' => 'a pour Receveur·e',
+      'contact_type_a' => 'Individual',
+      'contact_type_b' => 'Organization',
       'is_reserved' => '0',
       'is_active' => '1'
     ];
