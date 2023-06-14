@@ -348,6 +348,10 @@ class CRM_Uepalconfig_Config {
     return  $this->createOrGetRelationshipType($params);
   }
 
+  public function getRelationshipType_estInspecteurEcclesiastiqueDe() {
+    return civicrm_api3('RelationshipType', 'getsingle', ['id' => 73]);
+  }
+
   public function getRelationshipType_estIntervenantDeReligionPour() {
     $params = [
       'name_a_b' => 'est_intervenant_de_religion_pour',
